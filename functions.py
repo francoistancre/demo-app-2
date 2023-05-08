@@ -1,15 +1,18 @@
-import requests
-from bs4 import BeautifulSoup
+""" Fonctions """
 import csv
 import urllib.request
 import os
+import requests
+from bs4 import BeautifulSoup
+
+TIMEOUT_VALUE = 5 # en secondes
 
 # Fonction qui retourne une liste de dictionnaires de categories [Name, Link]
 def get_all_category(url):
     ##### URL DU SITE #####
     #url = "http://books.toscrape.com/"
 
-    response = requests.get(url)
+    response = requests.get(url, timeout=TIMEOUT_VALUE)
 
     #Liste de dictionnaires de categories et son lien
     data_categories = []
@@ -56,7 +59,7 @@ def get_book_url_by_categories(url_cat):
     # Récupérer le nombre de livres
     # --------------------------------------------------------------------------
 
-    response = requests.get(url_cat)
+    response = requests.get(url_cat, timeout=TIMEOUT_VALUE)
     if response.ok:
         soup = BeautifulSoup(response.text, 'html.parser')
     #nouvelle request + nouveau soup
@@ -74,7 +77,7 @@ def get_book_url_by_categories(url_cat):
         print("il y a plusieurs pages")
 
 
-    # Liste contenant des dictionnaires correspondant à chaque livre 
+    # Liste contenant des dictionnaires correspondant à chaque livre
     book_list = []
 
     # Début de l'url pour chaque livre
@@ -88,7 +91,7 @@ def get_book_url_by_categories(url_cat):
             if page_nbr == 1:
                 url_cat = url_cat.replace('index.html','page-' + page_nbr_string + '.html')
 
-                response = requests.get(url_cat)
+                response = requests.get(url_cat, timeout=TIMEOUT_VALUE)
                 if response.ok:
                     soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -110,7 +113,7 @@ def get_book_url_by_categories(url_cat):
                 page_nbr_actuel = str(page_nbr - 1)
                 url_cat = url_cat.replace('page-' + page_nbr_actuel + '.html','page-' + page_nbr_string + '.html')
 
-                response = requests.get(url_cat)
+                response = requests.get(url_cat, timeout=TIMEOUT_VALUE)
                 if response.ok:
                     soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -132,7 +135,7 @@ def get_book_url_by_categories(url_cat):
             print(url_cat)
             page_nbr = page_nbr + 1
     else:
-        response = requests.get(url_cat)
+        response = requests.get(url_cat, timeout=TIMEOUT_VALUE)
         if response.ok:
             soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -167,7 +170,7 @@ def get_book_data(url_book):
     # --------------------------------------------------------------------------
     # Récupérer des informations sur le livre et les mettre dans un dictionnaire
     # --------------------------------------------------------------------------
-    response = requests.get(url_book)
+    response = requests.get(url_book, timeout=TIMEOUT_VALUE)
     if response.ok:
         soup = BeautifulSoup(response.text, 'html.parser')
 
